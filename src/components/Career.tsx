@@ -5,8 +5,8 @@ const Career = () => {
     <div className="career-section section-container">
       <div className="career-container">
         <h2>
-          My career <span>&</span>
-          <br /> experience
+          Education & <span>&</span>
+          <br /> Achievements
         </h2>
         <div className="career-info">
           <div className="career-timeline">
@@ -15,58 +15,49 @@ const Career = () => {
           <div className="career-info-box">
             <div className="career-info-in">
               <div className="career-role">
-                <h4>Co-Founder</h4>
-                <h5>CallHQ.ai</h5>
+                <h4>B.Tech Computer Engineering</h4>
+                <h5>Pimpri Chinchwad College of Engineering (PCCOE)</h5>
               </div>
-              <h3>NOW</h3>
+              <h3>CGPA: 7.58</h3>
             </div>
             <p>
-              Building CallHQ.ai, a voice AI platform for
-              automating customer calls, support, and conversions.
+              Pursuing a degree in Computer Engineering with focus on full-stack development, algorithms, and software design. Active in hackathons, coding competitions, and tech communities.
             </p>
           </div>
           <div className="career-info-box">
             <div className="career-info-in">
               <div className="career-role">
-                <h4>Adobe</h4>
-                <h5>6+ years · Noida</h5>
+                <h4>Google Arcade Games 2026 Cohort-1</h4>
+                <h5>Participant</h5>
               </div>
-              <h3>2017–24</h3>
+              <h3>2026</h3>
             </div>
             <p>
-              Senior Lead Software Engineer (Feb 2024 – May 2024). Lead Software
-              Engineer (Feb 2021 – Feb 2024). Software Engineer II (Dec 2017 –
-              Feb 2021): internationalization, globalization, and localization for
-              Adobe Technical Communication Suite; functional and linguistic testing
-              strategy; in-house tooling; collaboration with product and engineering
-              for high-quality localized releases.
+              Selected as a participant in Google's Arcade Games program, demonstrating exceptional coding skills and problem-solving abilities in competitive programming.
             </p>
           </div>
           <div className="career-info-box">
             <div className="career-info-in">
               <div className="career-role">
-                <h4>Consultant</h4>
-                <h5>Genpact Headstrong </h5>
+                <h4>API Conf Pune 2025</h4>
+                <h5>Attended</h5>
               </div>
-              <h3>2016–17</h3>
+              <h3>2025</h3>
             </div>
             <p>
-              Sep 2016 – Nov 2017. Developed and maintained WCF services consumed
-              by the UI; deployment support across environments; NUnit tests and
-              coverage; bug fixes from QA and users; database work.
+              Attended API Conf Pune to stay updated with latest trends in API design, development practices, and modern backend technologies.
             </p>
           </div>
           <div className="career-info-box">
             <div className="career-info-in">
               <div className="career-role">
-                <h4>Sf Engineer</h4>
-                <h5>Infogain</h5>
+                <h4>Google WOW Event</h4>
+                <h5>Attended</h5>
               </div>
-              <h3>2013-16</h3>
+              <h3>2026</h3>
             </div>
             <p>
-              Software engineering across enterprise projects, contributing to
-              design, development, and delivery of business applications.
+              Participated in Google's World of Web event, exploring cutting-edge web technologies, performance optimization, and industry best practices for modern web development.
             </p>
           </div>
         </div>

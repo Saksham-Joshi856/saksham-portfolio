@@ -5,32 +5,18 @@ import { MdArrowBack, MdArrowForward } from "react-icons/md";
 
 const projects = [
   {
-    title: "CallHQ",
-    category: "Voice AI Calling Platform",
-    tools: "Voice AI, Calling Automation, CRM Integrations",
-    image: "/images/callhq.png",
-    link: "https://callhq.ai",
+    title: "RecruitAI",
+    category: "AI Resume Screening System",
+    tools: "React, Vite, Framer Motion, Node.js, Express.js, MongoDB, OpenRouter API",
+    image: "/images/placeholder.webp",
+    link: "https://resume-matcher-frontend-eight.vercel.app",
   },
   {
-    title: "Whatsapp Automation",
-    category: "WABA Application",
-    tools: "WhatsApp Business API, Workflow Automation, Notifications",
-    image: "/images/whatsapp.png",
-    link: "https://whatsapp.callhq.ai",
-  },
-  {
-    title: "Broki",
-    category: "Real Estate Platform for FnB Industry",
-    tools: "Property Discovery, Lead Management, Marketplace Workflows",
-    image: "/images/broki.png",
-    link: "https://broki.in",
-  },
-  {
-    title: "Orrdr.com",
-    category: "Ecommerce Platform and Mobile App",
-    tools: "Ecommerce, Mobile Experience, Order Management",
-    image: "/images/orrdr.png",
-    link: "https://orrdr.com",
+    title: "Maanavta Hitaay",
+    category: "NGO Website with Donations",
+    tools: "React.js, Tailwind CSS, Razorpay Integration, Responsive Design",
+    image: "/images/placeholder.webp",
+    link: "https://maanavtahitaay.org/",
   },
 ];
 
