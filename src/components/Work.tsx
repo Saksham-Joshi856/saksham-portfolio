@@ -1,51 +1,28 @@
-import { useState, useCallback } from "react";
 import "./styles/Work.css";
 import WorkImage from "./WorkImage";
-import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import { MdArrowOutward } from "react-icons/md";
+import { FaGithub } from "react-icons/fa6";
 
 const projects = [
   {
     title: "RecruitAI",
-    category: "AI Resume Screening System",
-    tools: "React, Vite, Framer Motion, Node.js, Express.js, MongoDB, OpenRouter API",
+    description: "AI-powered resume screening system that screens hundreds of resumes instantly with semantic matching and deep insights.",
+    techStack: ["React", "Vite", "Node.js", "Express.js", "MongoDB", "OpenRouter API", "Framer Motion"],
     image: "/images/recruitai-screenshot.png",
-    link: "https://resume-matcher-frontend-eight.vercel.app",
+    liveDemo: "https://resume-matcher-frontend-eight.vercel.app",
+    github: "https://github.com/Saksham-Joshi856",
   },
   {
     title: "Maanavta Hitaay",
-    category: "NGO Website with Donations",
-    tools: "React.js, Tailwind CSS, Razorpay Integration, Responsive Design",
+    description: "NGO website with secure donation integration, instant receipts, and 80G tax benefit support using Razorpay.",
+    techStack: ["React.js", "Tailwind CSS", "Razorpay Integration", "Responsive Design", "Node.js Backend"],
     image: "/images/maanavta-screenshot.png",
-    link: "https://maanavtahitaay.org/",
+    liveDemo: "https://maanavtahitaay.org/",
+    github: "https://github.com/Saksham-Joshi856",
   },
 ];
 
 const Work = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const goToSlide = useCallback(
-    (index: number) => {
-      if (isAnimating) return;
-      setIsAnimating(true);
-      setCurrentIndex(index);
-      setTimeout(() => setIsAnimating(false), 500);
-    },
-    [isAnimating]
-  );
-
-  const goToPrev = useCallback(() => {
-    const newIndex =
-      currentIndex === 0 ? projects.length - 1 : currentIndex - 1;
-    goToSlide(newIndex);
-  }, [currentIndex, goToSlide]);
-
-  const goToNext = useCallback(() => {
-    const newIndex =
-      currentIndex === projects.length - 1 ? 0 : currentIndex + 1;
-    goToSlide(newIndex);
-  }, [currentIndex, goToSlide]);
-
   return (
     <div className="work-section" id="work">
       <div className="work-container section-container">
@@ -53,77 +30,55 @@ const Work = () => {
           My <span>Work</span>
         </h2>
 
-        <div className="carousel-wrapper">
-          {/* Navigation Arrows */}
-          <button
-            className="carousel-arrow carousel-arrow-left"
-            onClick={goToPrev}
-            aria-label="Previous project"
-            data-cursor="disable"
-          >
-            <MdArrowBack />
-          </button>
-          <button
-            className="carousel-arrow carousel-arrow-right"
-            onClick={goToNext}
-            aria-label="Next project"
-            data-cursor="disable"
-          >
-            <MdArrowForward />
-          </button>
+        <div className="projects-grid">
+          {projects.map((project, index) => (
+            <div className="project-card" key={index}>
+              <div className="project-image-wrapper">
+                <WorkImage
+                  image={project.image}
+                  alt={project.title}
+                  link={project.liveDemo}
+                />
+              </div>
 
-          {/* Slides */}
-          <div className="carousel-track-container">
-            <div
-              className="carousel-track"
-              style={{
-                transform: `translateX(-${currentIndex * 100}%)`,
-              }}
-            >
-              {projects.map((project, index) => (
-                <div className="carousel-slide" key={index}>
-                  <div className="carousel-content">
-                    <div className="carousel-info">
-                      <div className="carousel-number">
-                        <h3>0{index + 1}</h3>
-                      </div>
-                      <div className="carousel-details">
-                        <h4>{project.title}</h4>
-                        <p className="carousel-category">
-                          {project.category}
-                        </p>
-                        <div className="carousel-tools">
-                          <span className="tools-label">Tools & Features</span>
-                          <p>{project.tools}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="carousel-image-wrapper">
-                      <WorkImage
-                        image={project.image}
-                        alt={project.title}
-                        link={project.link}
-                      />
-                    </div>
+              <div className="project-content">
+                <h3 className="project-title">{project.title}</h3>
+                <p className="project-description">{project.description}</p>
+
+                <div className="project-tech-stack">
+                  <span className="tech-label">Tech Stack</span>
+                  <div className="tech-tags">
+                    {project.techStack.map((tech, techIndex) => (
+                      <span key={techIndex} className="tech-tag">
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Dot Indicators */}
-          <div className="carousel-dots">
-            {projects.map((_, index) => (
-              <button
-                key={index}
-                className={`carousel-dot ${index === currentIndex ? "carousel-dot-active" : ""
-                  }`}
-                onClick={() => goToSlide(index)}
-                aria-label={`Go to project ${index + 1}`}
-                data-cursor="disable"
-              />
-            ))}
-          </div>
+                <div className="project-links">
+                  <a
+                    href={project.liveDemo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-link demo-link"
+                    data-cursor="disable"
+                  >
+                    <MdArrowOutward /> Live Demo
+                  </a>
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-link github-link"
+                    data-cursor="disable"
+                  >
+                    <FaGithub /> GitHub
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
