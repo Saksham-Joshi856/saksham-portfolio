@@ -8,14 +8,14 @@ const projects = [
     title: "RecruitAI",
     category: "AI Resume Screening System",
     tools: "React, Vite, Framer Motion, Node.js, Express.js, MongoDB, OpenRouter API",
-    image: "/images/recruitai-screenshot.webp.png",
+    image: "/images/recruitai-screenshot.png",
     link: "https://resume-matcher-frontend-eight.vercel.app",
   },
   {
     title: "Maanavta Hitaay",
     category: "NGO Website with Donations",
     tools: "React.js, Tailwind CSS, Razorpay Integration, Responsive Design",
-    image: "/images/maanavta-screenshot.webp.png",
+    image: "/images/maanavta-screenshot.png",
     link: "https://maanavtahitaay.org/",
   },
 ];
