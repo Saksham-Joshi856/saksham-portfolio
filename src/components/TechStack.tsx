@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useRef, useMemo, useState, useEffect } from "react";
+import { memo, useRef, useMemo, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
@@ -10,6 +10,8 @@ import {
   CylinderCollider,
   RapierRigidBody,
 } from "@react-three/rapier";
+import { getAdaptiveDPR } from "../utils/device";
+import { prefersReducedMotion } from "../utils/motion";
 
 const textureLoader = new THREE.TextureLoader();
 const imageUrls = [
@@ -24,44 +26,40 @@ const imageUrls = [
 ];
 const textures = imageUrls.map((url) => textureLoader.load(url));
 
-const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
+const sphereGeometry = new THREE.SphereGeometry(1, 24, 24);
 
-const spheres = [...Array(30)].map(() => ({
-  scale: [0.7, 1, 0.8, 1, 1][Math.floor(Math.random() * 5)],
+const spheres = [...Array(30)].map((_, index) => ({
+  scale: [0.7, 1, 0.8, 1, 1][index % 5],
+  materialIndex: index % imageUrls.length,
 }));
 
 type SphereProps = {
-  vec?: THREE.Vector3;
   scale: number;
+  materialIndex: number;
   r?: typeof THREE.MathUtils.randFloatSpread;
-  material: THREE.MeshPhysicalMaterial;
+  materials: THREE.MeshPhysicalMaterial[];
   isActive: boolean;
 };
 
 function SphereGeo({
-  vec = new THREE.Vector3(),
   scale,
+  materialIndex,
   r = THREE.MathUtils.randFloatSpread,
-  material,
+  materials,
   isActive,
 }: SphereProps) {
   const api = useRef<RapierRigidBody | null>(null);
+  const impulseVec = useMemo(() => new THREE.Vector3(), []);
 
   useFrame((_state, delta) => {
-    if (!isActive) return;
-    delta = Math.min(0.1, delta);
-    const impulse = vec
-      .copy(api.current!.translation())
+    if (!isActive || !api.current) return;
+    const clampedDelta = Math.min(0.1, delta);
+    impulseVec
+      .copy(api.current.translation())
       .normalize()
-      .multiply(
-        new THREE.Vector3(
-          -50 * delta * scale,
-          -150 * delta * scale,
-          -50 * delta * scale
-        )
-      );
-
-    api.current?.applyImpulse(impulse, true);
+      .multiplyScalar(-50 * clampedDelta * scale);
+    impulseVec.y += -150 * clampedDelta * scale;
+    api.current.applyImpulse(impulseVec, true);
   });
 
   return (
@@ -84,7 +82,7 @@ function SphereGeo({
         receiveShadow
         scale={scale}
         geometry={sphereGeometry}
-        material={material}
+        material={materials[materialIndex]}
         rotation={[0.3, 1, 1]}
       />
     </RigidBody>
@@ -98,18 +96,17 @@ type PointerProps = {
 
 function Pointer({ vec = new THREE.Vector3(), isActive }: PointerProps) {
   const ref = useRef<RapierRigidBody>(null);
+  const targetVec = useMemo(() => new THREE.Vector3(), []);
 
   useFrame(({ pointer, viewport }) => {
-    if (!isActive) return;
-    const targetVec = vec.lerp(
-      new THREE.Vector3(
-        (pointer.x * viewport.width) / 2,
-        (pointer.y * viewport.height) / 2,
-        0
-      ),
-      0.2
+    if (!isActive || !ref.current) return;
+    targetVec.set(
+      (pointer.x * viewport.width) / 2,
+      (pointer.y * viewport.height) / 2,
+      0
     );
-    ref.current?.setNextKinematicTranslation(targetVec);
+    vec.lerp(targetVec, 0.2);
+    ref.current.setNextKinematicTranslation(vec);
   });
 
   return (
@@ -126,55 +123,91 @@ function Pointer({ vec = new THREE.Vector3(), isActive }: PointerProps) {
 
 const TechStack = () => {
   const [isActive, setIsActive] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = prefersReducedMotion();
+
+  const materials = useMemo(
+    () =>
+      textures.map(
+        (texture) =>
+          new THREE.MeshPhysicalMaterial({
+            map: texture,
+            emissive: "#ffffff",
+            emissiveMap: texture,
+            emissiveIntensity: 0.3,
+            metalness: 0.5,
+            roughness: 1,
+            clearcoat: 0.1,
+          })
+      ),
+    []
+  );
 
   useEffect(() => {
+    const section = sectionRef.current;
+    const workSection = document.getElementById("work");
+    if (!section || !workSection) return;
+
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop;
-      const threshold = document
-        .getElementById("work")!
-        .getBoundingClientRect().top;
+      const threshold = workSection.getBoundingClientRect().top;
       setIsActive(scrollY > threshold);
     };
-    document.querySelectorAll(".header a").forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      element.addEventListener("click", () => {
-        const interval = setInterval(() => {
-          handleScroll();
-        }, 10);
-        setTimeout(() => {
-          clearInterval(interval);
-        }, 1000);
-      });
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { rootMargin: "100px", threshold: 0.05 }
+    );
+    observer.observe(section);
+
+    const navLinks = document.querySelectorAll(".header a[data-href]");
+    const clickHandlers: Array<{ element: Element; handler: () => void }> = [];
+
+    navLinks.forEach((elem) => {
+      const handler = () => {
+        const interval = setInterval(handleScroll, 50);
+        setTimeout(() => clearInterval(interval), 1000);
+      };
+      elem.addEventListener("click", handler);
+      clickHandlers.push({ element: elem, handler });
     });
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
     return () => {
+      observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
+      clickHandlers.forEach(({ element, handler }) => {
+        element.removeEventListener("click", handler);
+      });
     };
   }, []);
-  const materials = useMemo(() => {
-    return textures.map(
-      (texture) =>
-        new THREE.MeshPhysicalMaterial({
-          map: texture,
-          emissive: "#ffffff",
-          emissiveMap: texture,
-          emissiveIntensity: 0.3,
-          metalness: 0.5,
-          roughness: 1,
-          clearcoat: 0.1,
-        })
-    );
-  }, []);
+
+  const physicsActive = isActive && isVisible && !reducedMotion;
 
   return (
-    <div className="techstack">
+    <div className="techstack" ref={sectionRef}>
       <h2> My Techstack</h2>
 
       <Canvas
         shadows
-        gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+        dpr={[1, getAdaptiveDPR(1.75)]}
+        frameloop={physicsActive ? "always" : "demand"}
+        gl={{
+          alpha: true,
+          stencil: false,
+          depth: true,
+          antialias: false,
+          powerPreference: "high-performance",
+        }}
         camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
-        onCreated={(state) => (state.gl.toneMappingExposure = 1.5)}
+        onCreated={(state) => {
+          state.gl.toneMappingExposure = 1.5;
+        }}
         className="tech-canvas"
       >
         <ambientLight intensity={1} />
@@ -188,13 +221,13 @@ const TechStack = () => {
         />
         <directionalLight position={[0, 5, -4]} intensity={2} />
         <Physics gravity={[0, 0, 0]}>
-          <Pointer isActive={isActive} />
+          <Pointer isActive={physicsActive} />
           {spheres.map((props, i) => (
             <SphereGeo
               key={i}
               {...props}
-              material={materials[Math.floor(Math.random() * materials.length)]}
-              isActive={isActive}
+              materials={materials}
+              isActive={physicsActive}
             />
           ))}
         </Physics>
@@ -203,12 +236,14 @@ const TechStack = () => {
           environmentIntensity={0.5}
           environmentRotation={[0, 4, 2]}
         />
-        <EffectComposer enableNormalPass={false}>
-          <N8AO color="#0f002c" aoRadius={2} intensity={1.15} />
-        </EffectComposer>
+        {physicsActive && (
+          <EffectComposer enableNormalPass={false}>
+            <N8AO color="#0f002c" aoRadius={2} intensity={1.15} />
+          </EffectComposer>
+        )}
       </Canvas>
     </div>
   );
 };
 
-export default TechStack;
+export default memo(TechStack);

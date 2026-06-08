@@ -4,26 +4,34 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const WhatIDo = () => {
   const containerRef = useRef<(HTMLDivElement | null)[]>([]);
+  const clickHandlersRef = useRef<
+    Array<{ container: HTMLDivElement; handler: () => void }>
+  >([]);
+
   const setRef = (el: HTMLDivElement | null, index: number) => {
     containerRef.current[index] = el;
   };
+
   useEffect(() => {
-    if (ScrollTrigger.isTouch) {
-      containerRef.current.forEach((container) => {
-        if (container) {
-          container.classList.remove("what-noTouch");
-          container.addEventListener("click", () => handleClick(container));
-        }
-      });
-    }
+    if (!ScrollTrigger.isTouch) return;
+
+    clickHandlersRef.current = [];
+    containerRef.current.forEach((container) => {
+      if (!container) return;
+      container.classList.remove("what-noTouch");
+      const handler = () => handleClick(container);
+      container.addEventListener("click", handler);
+      clickHandlersRef.current.push({ container, handler });
+    });
+
     return () => {
-      containerRef.current.forEach((container) => {
-        if (container) {
-          container.removeEventListener("click", () => handleClick(container));
-        }
+      clickHandlersRef.current.forEach(({ container, handler }) => {
+        container.removeEventListener("click", handler);
       });
+      clickHandlersRef.current = [];
     };
   }, []);
+
   return (
     <div className="whatIDO">
       <div className="what-box">
@@ -36,7 +44,7 @@ const WhatIDo = () => {
       </div>
       <div className="what-box">
         <div className="what-box-in">
-          <div className="what-border2">
+          <div className="what-border2" aria-hidden="true">
             <svg width="100%">
               <line
                 x1="0"
@@ -61,8 +69,11 @@ const WhatIDo = () => {
           <div
             className="what-content what-noTouch"
             ref={(el) => setRef(el, 0)}
+            role="button"
+            tabIndex={0}
+            aria-expanded="false"
           >
-            <div className="what-border1">
+            <div className="what-border1" aria-hidden="true">
               <svg height="100%">
                 <line
                   x1="0"
@@ -84,7 +95,7 @@ const WhatIDo = () => {
                 />
               </svg>
             </div>
-            <div className="what-corner"></div>
+            <div className="what-corner" aria-hidden="true"></div>
 
             <div className="what-content-in">
               <h3>FULL STACK DEVELOPMENT</h3>
@@ -103,14 +114,17 @@ const WhatIDo = () => {
                 <div className="what-tags">Git and GitHub</div>
                 <div className="what-tags">REST APIs</div>
               </div>
-              <div className="what-arrow"></div>
+              <div className="what-arrow" aria-hidden="true"></div>
             </div>
           </div>
           <div
             className="what-content what-noTouch"
             ref={(el) => setRef(el, 1)}
+            role="button"
+            tabIndex={0}
+            aria-expanded="false"
           >
-            <div className="what-border1">
+            <div className="what-border1" aria-hidden="true">
               <svg height="100%">
                 <line
                   x1="0"
@@ -123,7 +137,7 @@ const WhatIDo = () => {
                 />
               </svg>
             </div>
-            <div className="what-corner"></div>
+            <div className="what-corner" aria-hidden="true"></div>
             <div className="what-content-in">
               <h3>AI and MODERN TECH</h3>
               <h4>AI-Powered Solutions and Innovation</h4>
@@ -140,7 +154,7 @@ const WhatIDo = () => {
                 <div className="what-tags">Vite</div>
                 <div className="what-tags">Cloud and Deployment</div>
               </div>
-              <div className="what-arrow"></div>
+              <div className="what-arrow" aria-hidden="true"></div>
             </div>
           </div>
         </div>
@@ -152,7 +166,8 @@ const WhatIDo = () => {
 export default WhatIDo;
 
 function handleClick(container: HTMLDivElement) {
-  container.classList.toggle("what-content-active");
+  const isActive = container.classList.toggle("what-content-active");
+  container.setAttribute("aria-expanded", String(isActive));
   container.classList.remove("what-sibling");
   if (container.parentElement) {
     const siblings = Array.from(container.parentElement.children);
@@ -161,6 +176,7 @@ function handleClick(container: HTMLDivElement) {
       if (sibling !== container) {
         sibling.classList.remove("what-content-active");
         sibling.classList.toggle("what-sibling");
+        sibling.setAttribute("aria-expanded", "false");
       }
     });
   }

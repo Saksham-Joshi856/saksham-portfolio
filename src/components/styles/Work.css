@@ -48,7 +48,7 @@
   direction: rtl;
 }
 
-.project-card:nth-child(even) > * {
+.project-card:nth-child(even)>* {
   direction: ltr;
 }
 

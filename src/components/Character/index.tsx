@@ -1,7 +1,8 @@
+import { memo } from "react";
 import Scene from "./Scene";
 
 const CharacterModel = () => {
   return <Scene />;
 };
 
-export default CharacterModel;
+export default memo(CharacterModel);

@@ -2,6 +2,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
+import { debounce, prefersReducedMotion } from "../../utils/motion";
+import { waitForFonts } from "../../utils/fonts";
 
 interface ParaElement extends HTMLElement {
   anim?: gsap.core.Animation;
@@ -10,9 +12,12 @@ interface ParaElement extends HTMLElement {
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
-export default function setSplitText() {
-  ScrollTrigger.config({ ignoreMobileResize: true });
-  if (window.innerWidth < 900) return;
+let refreshListenerAttached = false;
+let isInitialized = false;
+
+function splitElements() {
+  if (window.innerWidth < 900 || prefersReducedMotion()) return;
+
   const paras: NodeListOf<ParaElement> = document.querySelectorAll(".para");
   const titles: NodeListOf<ParaElement> = document.querySelectorAll(".title");
 
@@ -48,6 +53,7 @@ export default function setSplitText() {
       }
     );
   });
+
   titles.forEach((title: ParaElement) => {
     if (title.anim) {
       title.anim.progress(1).kill();
@@ -75,6 +81,24 @@ export default function setSplitText() {
       }
     );
   });
+}
 
-  ScrollTrigger.addEventListener("refresh", () => setSplitText());
+const debouncedSplit = debounce(() => {
+  void waitForFonts().then(splitElements);
+}, 250);
+
+export default async function setSplitText() {
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  await waitForFonts();
+  splitElements();
+
+  if (!refreshListenerAttached) {
+    refreshListenerAttached = true;
+    ScrollTrigger.addEventListener("refresh", debouncedSplit);
+  }
+
+  if (!isInitialized) {
+    isInitialized = true;
+  }
 }
