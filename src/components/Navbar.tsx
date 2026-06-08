@@ -1,103 +1,51 @@
-import { useEffect } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import HoverLinks from "./HoverLinks";
-import { gsap } from "gsap";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { useEffect, useState } from "react";
+import { profile } from "../data/profile";
 import "./styles/Navbar.css";
-import { debounce, prefersReducedMotion } from "../utils/motion";
 
-gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
-export let smoother: ScrollSmoother;
+const navLinks = [
+  { href: "#about", label: "About" },
+  { href: "#skills", label: "Skills" },
+  { href: "#experience", label: "Experience" },
+  { href: "#projects", label: "Projects" },
+  { href: "#achievements", label: "Achievements" },
+  { href: "#education", label: "Education" },
+  { href: "#contact", label: "Contact" },
+];
 
 const Navbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+
   useEffect(() => {
-    const reducedMotion = prefersReducedMotion();
-
-    smoother = ScrollSmoother.create({
-      wrapper: "#smooth-wrapper",
-      content: "#smooth-content",
-      smooth: reducedMotion ? 0.5 : 1.2,
-      speed: reducedMotion ? 1 : 1.4,
-      effects: !reducedMotion,
-      autoResize: true,
-      ignoreMobileResize: true,
-    });
-
-    smoother.scrollTop(0);
-    smoother.paused(true);
-
-    const links = document.querySelectorAll(".header ul a");
-    const clickHandlers: Array<{ element: HTMLAnchorElement; handler: (e: Event) => void }> =
-      [];
-
-    links.forEach((elem) => {
-      const element = elem as HTMLAnchorElement;
-      const handler = (e: Event) => {
-        if (window.innerWidth > 1024) {
-          e.preventDefault();
-          const section = element.getAttribute("data-href");
-          if (section) {
-            smoother.scrollTo(section, true, "top top");
-          }
-        }
-      };
-      element.addEventListener("click", handler);
-      clickHandlers.push({ element, handler });
-    });
-
-    const onResize = debounce(() => {
-      ScrollSmoother.refresh(true);
-    }, 200);
-
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-      clickHandlers.forEach(({ element, handler }) => {
-        element.removeEventListener("click", handler);
-      });
-      smoother?.kill();
-    };
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <>
-      <nav className="header" aria-label="Primary navigation">
-        <a href="/#" className="navbar-title" data-cursor="disable" aria-label="Home">
-          SJ
+    <header className={`site-header ${scrolled ? "site-header--scrolled" : ""}`}>
+      <nav className="site-nav" aria-label="Primary navigation">
+        <a href="#hero" className="site-nav__brand" aria-label="Home">
+          {profile.initials}
         </a>
-        <a
-          href="https://www.linkedin.com/in/saksham-joshi-338568349/"
-          className="navbar-connect"
-          data-cursor="disable"
-          target="_blank"
-          rel="noreferrer"
-        >
-          linkedin.com/in/saksham-joshi-338568349
-        </a>
-        <ul>
-          <li>
-            <a data-href="#about" href="#about">
-              <HoverLinks text="ABOUT" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#work" href="#work">
-              <HoverLinks text="WORK" />
-            </a>
-          </li>
-          <li>
-            <a data-href="#contact" href="#contact">
-              <HoverLinks text="CONTACT" />
-            </a>
-          </li>
-        </ul>
-      </nav>
 
-      <div className="landing-circle1" aria-hidden="true"></div>
-      <div className="landing-circle2" aria-hidden="true"></div>
-      <div className="nav-fade" aria-hidden="true"></div>
-    </>
+        <ul className="site-nav__links">
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          href={profile.resume}
+          className="btn btn--secondary btn--sm site-nav__cta"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Resume
+        </a>
+      </nav>
+    </header>
   );
 };
 

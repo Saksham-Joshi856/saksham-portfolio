@@ -1,4 +1,74 @@
-@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap");
+
+:root {
+  --font-sans: "Geist", system-ui, -apple-system, sans-serif;
+  --bg: #0a0e17;
+  --bg-elevated: #111827;
+  --surface: #151c2c;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(94, 234, 212, 0.25);
+  --text: #eae5ec;
+  --text-muted: #9ca3af;
+  --accent: #5eead4;
+  --accent-dim: rgba(94, 234, 212, 0.12);
+  --danger: #f87171;
+  --success: #4ade80;
+  --max-width: 1100px;
+  --section-padding: clamp(4rem, 8vw, 6rem);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+main {
+  display: block;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
 
 .skip-link {
   position: absolute;
@@ -6,9 +76,9 @@
   left: 16px;
   z-index: 200;
   padding: 10px 16px;
-  background: var(--accentColor);
-  color: var(--backgroundColor);
-  border-radius: 6px;
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: var(--radius-sm);
   font-weight: 600;
   transition: top 0.2s ease;
 }
@@ -18,8 +88,137 @@
 }
 
 :focus-visible {
-  outline: 2px solid var(--accentColor);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+/* Sections */
+.section {
+  padding: var(--section-padding) 24px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.section--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.section__title {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.section__lead {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 62ch;
+  margin-bottom: 2rem;
+}
+
+.section__text {
+  color: var(--text-muted);
+  max-width: 68ch;
+  margin-top: 1rem;
+}
+
+.section__header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.btn--primary:hover {
+  background: #2dd4bf;
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn--secondary:hover {
+  border-color: var(--border-hover);
+  color: var(--accent);
+}
+
+.btn--sm {
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(94, 234, 212, 0.2);
+}
+
+.badge--muted {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  border-color: var(--border);
+}
+
+.badge--accent {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* Status */
+.status-text {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.status-text--error {
+  color: var(--danger);
+}
+
+.status-text--success {
+  color: var(--success);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -31,140 +230,9 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
 
-:root {
-  font-family: "Geist", sans-serif;
-
-  font-optical-sizing: auto;
-  font-style: normal;
-  line-height: 1.5;
-  scroll-behavior: smooth;
-  color-scheme: light dark;
-  color: #eae5ec;
-  background-color: var(--backgroundColor);
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  --accentColor: #5eead4;
-  --backgroundColor: #0a0e17;
-  --vh: 100vh;
-  --vh: 100svh;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Geist", sans-serif;
-}
-
-body {
-  overflow: hidden;
-}
-
-a {
-  color: inherit;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: var(--accentColor);
-}
-
-main {
-  opacity: 1;
-  transition: 0.3s;
-}
-
-.main-active {
-  opacity: 0;
-  animation: fadeIn 1s 1;
-  animation-fill-mode: forwards;
-}
-
-@keyframes fadeIn {
-  100% {
+  .section {
     opacity: 1;
-  }
-}
-
-body {
-  margin: 0;
-  height: auto;
-  background-color: #050810;
-  flex-grow: 1;
-  --cWidth: calc(100% - 30px);
-  --cMaxWidth: 1920px;
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-.main-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-.container-main {
-  width: 100%;
-  margin: auto;
-  position: relative;
-}
-
-.container1 {
-  width: var(--cWidth);
-  height: var(--vh);
-  margin: auto;
-  position: relative;
-}
-
-.split-line {
-  overflow: hidden;
-}
-
-.split-h2 {
-  overflow: hidden;
-  display: flex;
-  white-space: nowrap;
-  flex-wrap: nowrap;
-}
-
-.techstack {
-  width: 100%;
-  position: relative;
-  overflow: clip;
-  height: var(--vh);
-  margin: auto;
-  margin-top: 50px;
-  margin-bottom: -100px;
-}
-
-.techstack h2 {
-  font-size: 80px;
-  text-align: center;
-  position: absolute;
-  width: 100%;
-  top: 120px;
-  left: 0;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-@media screen and (min-width: 768px) {
-  body {
-    --cWidth: 94%;
-  }
-}
-
-@media screen and (max-width: 900px) {
-  .techstack h2 {
-    font-size: 40px;
+    transform: none;
   }
 }

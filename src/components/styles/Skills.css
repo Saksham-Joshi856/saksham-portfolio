@@ -1,0 +1,28 @@
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.skills-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  transition: border-color 0.2s ease;
+}
+
+.skills-card:hover {
+  border-color: var(--border-hover);
+}
+
+.skills-card h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.skills-card ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
