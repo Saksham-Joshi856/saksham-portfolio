@@ -49,7 +49,7 @@ const Contact = () => {
         <form className="contact-form" onSubmit={handleSubmit} noValidate>
           {!formId && (
             <p className="status-text status-text--error" role="alert">
-              Contact form is not configured. Set VITE_FORMSPREE_FORM_ID in your environment.
+              Contact form is not configured. Set VITE_FORMSPREE_FORM_ID (Web3Forms Access Key) in your environment.
             </p>
           )}
 

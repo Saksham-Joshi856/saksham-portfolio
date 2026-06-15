@@ -58,24 +58,30 @@ export function useContactForm() {
 
     setStatus("loading");
     try {
-      const response = await fetch(`https://formspree.io/f/${formId}`, {
+      console.log("Submitting to Web3Forms...");
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
+          access_key: formId,
+          ...formData,
         }),
       });
 
-      if (!response.ok) throw new Error("Form submission failed");
+      const result = await response.json();
+      console.log("Web3Forms response:", result);
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Form submission failed");
+      }
 
       setStatus("success");
       setFormData({ name: "", email: "", message: "" });
-    } catch {
+    } catch (err) {
+      console.error("Form submission error:", err);
       setStatus("error");
     }
   }
