@@ -10,6 +10,7 @@
   --text: #eae5ec;
   --text-muted: #9ca3af;
   --accent: #5eead4;
+  --accent-rgb: 94, 234, 212;
   --accent-dim: rgba(94, 234, 212, 0.12);
   --danger: #f87171;
   --success: #4ade80;
@@ -18,6 +19,67 @@
   --radius: 12px;
   --radius-sm: 8px;
 }
+
+/* --- Futuristic Background Styles --- */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.grid-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, #000 70%, transparent 100%);
+}
+
+.mouse-blob {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+  filter: blur(60px);
+}
+
+.ambient-gradient {
+  position: fixed;
+  z-index: -2;
+  pointer-events: none;
+  filter: blur(120px);
+  border-radius: 50%;
+  opacity: 0.2;
+}
+
+.ambient-gradient--1 {
+  width: 700px;
+  height: 700px;
+  top: -15%;
+  left: -15%;
+  background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.2), transparent 70%);
+}
+
+.ambient-gradient--2 {
+  width: 600px;
+  height: 600px;
+  bottom: -15%;
+  right: -15%;
+  background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.15), transparent 70%);
+}
+
 
 *,
 *::before,
