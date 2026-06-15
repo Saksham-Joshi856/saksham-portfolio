@@ -10,7 +10,8 @@ export const profile = {
   githubUsername: "Saksham-Joshi856",
   linkedin: "https://www.linkedin.com/in/saksham-joshi-338568349/",
   resume: "/Saksham_Joshi_Resume.pdf",
-  leetcode: "SakshamJoshi", // public username for optional stats
+  leetcode: "IUEuYU2Hso", // public username for stats
+  leetcodeUrl: "https://leetcode.com/u/IUEuYU2Hso/",
   location: "Pune, India",
   initials: "SJ",
 } as const;

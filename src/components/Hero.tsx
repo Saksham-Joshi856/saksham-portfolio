@@ -3,6 +3,7 @@ import Section from "./Section";
 import "./styles/Hero.css";
 import { MdArrowOutward } from "react-icons/md";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa6";
+import { SiLeetcode } from "react-icons/si";
 
 const Hero = () => {
   return (
@@ -51,6 +52,9 @@ const Hero = () => {
             </a>
             <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
               <FaLinkedinIn aria-hidden="true" /> LinkedIn <MdArrowOutward aria-hidden="true" />
+            </a>
+            <a href={profile.leetcodeUrl} target="_blank" rel="noopener noreferrer">
+              <SiLeetcode aria-hidden="true" /> LeetCode <MdArrowOutward aria-hidden="true" />
             </a>
             <a href={`mailto:${profile.email}`}>
               Email <MdArrowOutward aria-hidden="true" />

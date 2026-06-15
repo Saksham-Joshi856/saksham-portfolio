@@ -20,7 +20,7 @@ export function useLeetCodeStats() {
     async function fetchStats() {
       try {
         const response = await fetch(
-          `https://leetcode-stats-api.herokuapp.com/${profile.leetcode}`,
+          `https://leetcode-api-faisalshohag.vercel.app/${profile.leetcode}`,
           { signal: controller.signal }
         );
 

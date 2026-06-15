@@ -1,6 +1,8 @@
 import { useLeetCodeStats } from "../hooks/useLeetCodeStats";
 import Section from "./Section";
 import "./styles/LeetCodeStats.css";
+import { profile } from "../data/profile";
+import { MdArrowOutward } from "react-icons/md";
 
 const LeetCodeStats = () => {
   const { stats, loading, error } = useLeetCodeStats();
@@ -37,6 +39,16 @@ const LeetCodeStats = () => {
             <span className="stat-card__label">Contest Rating</span>
           </div>
         )}
+      </div>
+      <div className="section__actions" style={{ marginTop: "2rem", textAlign: "center" }}>
+        <a
+          href={profile.leetcodeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn--secondary btn--sm"
+        >
+          View Profile <MdArrowOutward aria-hidden="true" />
+        </a>
       </div>
     </Section>
   );

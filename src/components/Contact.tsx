@@ -4,6 +4,7 @@ import Section from "./Section";
 import "./styles/Contact.css";
 import { MdArrowOutward, MdCopyright } from "react-icons/md";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa6";
+import { SiLeetcode } from "react-icons/si";
 
 const Contact = () => {
   const { formData, errors, status, formId, updateField, handleSubmit } =
@@ -38,6 +39,9 @@ const Contact = () => {
             </a>
             <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">
               <FaLinkedinIn aria-hidden="true" /> LinkedIn <MdArrowOutward aria-hidden="true" />
+            </a>
+            <a href={profile.leetcodeUrl} target="_blank" rel="noopener noreferrer">
+              <SiLeetcode aria-hidden="true" /> LeetCode <MdArrowOutward aria-hidden="true" />
             </a>
           </div>
         </div>
